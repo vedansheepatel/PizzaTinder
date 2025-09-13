@@ -1,5 +1,51 @@
-import { useNavigate } from "react-router-dom";
+
+// const CreateGroup: React.FC = () => {
+//   const [groupName, setGroupName] = useState("");
+//   const [hostName, setHostName] = useState("");
+//   const [peopleCount, setPeopleCount] = useState(1);
+//   const [pizzaType, setPizzaType] = useState("build");
+
+//  const increment = () =>
+//   setPeopleCount((prev) => (prev < 6 ? prev + 1 : prev));
+// const decrement = () =>
+//   setPeopleCount((prev) => (prev > 1 ? prev - 1 : 1));
+
+//   const handleSubmit = () => {
+//     console.log({ groupName, hostName, peopleCount, pizzaType });
+//     // here you can navigate to the next page later
+//   };
+
+//   return (
+//     <Container>
+//       <InputField
+//         placeholder="Group Name"
+//         value={groupName}
+//         onChange={(e) => setGroupName(e.target.value)}
+//       />
+//       <InputField
+//         placeholder="Host Name"
+//         value={hostName}
+//         onChange={(e) => setHostName(e.target.value)}
+//       />
+//       <Label>Select number of people</Label>
+//       <NumberSelector>
+//         <NumberButton onClick={decrement}>-</NumberButton>
+//         {peopleCount}
+//         <NumberButton onClick={increment}>+</NumberButton>
+//       </NumberSelector>
+//       <Dropdown value={pizzaType} onChange={(e) => setPizzaType(e.target.value)}>
+//         <option value="build">Build Your Own</option>
+//         <option value="set">Set Pizza</option>
+//         <option value="shortlist">Shortlist of Toppings</option>
+//       </Dropdown>
+//       <SubmitButton onClick={handleSubmit}>Create Group</SubmitButton>
+//     </Container>
+//   );
+// };
+// export default CreateGroup;
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useRoom } from "../../hooks/useRoom";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -90,20 +136,31 @@ const Label = styled.div`
   margin-bottom: 0.5rem;
 `;
 
+
+
+// ...InputField, NumberSelector, NumberButton, Dropdown, SubmitButton, Label (same as before)
+
 const CreateGroup: React.FC = () => {
   const [groupName, setGroupName] = useState("");
   const [hostName, setHostName] = useState("");
   const [peopleCount, setPeopleCount] = useState(1);
-  const [pizzaType, setPizzaType] = useState("build");
+  const [pizzaType, setPizzaType] = useState<"build" | "set" | "shortlist">("build");
+  const navigate = useNavigate();
+  const { createRoom } = useRoom();
 
- const increment = () =>
-  setPeopleCount((prev) => (prev < 6 ? prev + 1 : prev));
-const decrement = () =>
-  setPeopleCount((prev) => (prev > 1 ? prev - 1 : 1));
+  const increment = () => setPeopleCount((prev) => (prev < 6 ? prev + 1 : prev));
+  const decrement = () => setPeopleCount((prev) => (prev > 1 ? prev - 1 : 1));
 
-  const handleSubmit = () => {
-    console.log({ groupName, hostName, peopleCount, pizzaType });
-    // here you can navigate to the next page later
+  const handleSubmit = async () => {
+    const room = await createRoom(groupName, hostName, peopleCount, pizzaType);
+
+    if (pizzaType === "build") {
+       navigate("/qr-display", { state: { roomId: room.id } });
+    } else if (pizzaType === "set") {
+      navigate("/select-set-pizza");
+    } else {
+      navigate("/collection-pizza");
+    }
   };
 
   return (
@@ -124,11 +181,14 @@ const decrement = () =>
         {peopleCount}
         <NumberButton onClick={increment}>+</NumberButton>
       </NumberSelector>
-      <Dropdown value={pizzaType} onChange={(e) => setPizzaType(e.target.value)}>
-        <option value="build">Build Your Own</option>
-        <option value="set">Set Pizza</option>
-        <option value="shortlist">Shortlist of Toppings</option>
-      </Dropdown>
+      <Dropdown
+        value={pizzaType}
+        onChange={(e) => setPizzaType(e.target.value as "build" | "set" | "shortlist")}
+        >
+    <option value="build">Build Your Own</option>
+    <option value="set">Set Pizza</option>
+    <option value="shortlist">Collection of Pizza</option>
+</Dropdown>
       <SubmitButton onClick={handleSubmit}>Create Group</SubmitButton>
     </Container>
   );
