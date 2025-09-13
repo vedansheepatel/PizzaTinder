@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES6",                       // Output JavaScript version
+    "lib": ["DOM", "DOM.Iterable", "ESNext"], 
+    "allowJs": true,                        // Allow importing JS files
+    "skipLibCheck": true,                   // Skip type checking of node_modules
+    "esModuleInterop": true,                // Allows import of CommonJS modules
+    "allowSyntheticDefaultImports": true,   // Allow default imports from modules with no default
+    "strict": true,                         // Enable strict type-checking
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",                     // Module system
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,                // Required for React
+    "noEmit": true,                         // Don’t output compiled JS (handled by bundler)
+    "jsx": "react-jsx"                      // Use the modern JSX transform
+  },
+  "include": ["src"],                        // Include your source files
+  "exclude": ["node_modules"]                // Exclude node_modules
+}
