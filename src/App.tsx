@@ -1,24 +1,17 @@
 // src/App.tsx
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
 
 import LandingPage from "./components/LandingPage";
 import CreateGroup from "./components/CreateGroup";
 import JoinGroup from "./components/JoinGroup";
 import SwipeDeck from "./components/SwipeDeck";
-import WaitingScreen from "./components/WaitingScreen";
-import PizzaVisual from "./components/PizzaVisual";
-import NotFound from "./components/NotFound";
-
-/**
- * App.tsx - main router and shell for Pizza Tinder (mobile web)
- * - Make sure each imported component exists and has `export default ...`
- * - You can add app-level providers (Auth, Firebase context) here later
- */
+import WaitingRoom from "./components/WaitingRoom";
+import FinalPizza from "./components/FinalPizza";
 
 const App: React.FC = () => {
   return (
-    <Router>
+    <BrowserRouter>
       <div className="min-h-screen bg-gray-50 text-gray-900">
         {/* You can add a top nav / header here if desired */}
         <Routes>
@@ -34,16 +27,13 @@ const App: React.FC = () => {
           <Route path="/swipe/:roomId" element={<SwipeDeck />} />
 
           {/* Waiting screen while aggregation runs */}
-          <Route path="/waiting/:roomId" element={<WaitingScreen />} />
+          <Route path="/waiting/:roomId" element={<WaitingRoom />} />
 
           {/* Final pizza result */}
-          <Route path="/final/:roomId" element={<PizzaVisual />} />
-
-          {/* Fallback */}
-          <Route path="*" element={<NotFound />} />
+          <Route path="/final/:roomId" element={<FinalPizza />} />
         </Routes>
       </div>
-    </Router>
+    </BrowserRouter>
   );
 };
 
