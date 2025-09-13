@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import styled from "styled-components";
 
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
