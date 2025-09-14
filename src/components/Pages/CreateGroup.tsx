@@ -1,58 +1,15 @@
-
-// const CreateGroup: React.FC = () => {
-//   const [groupName, setGroupName] = useState("");
-//   const [hostName, setHostName] = useState("");
-//   const [peopleCount, setPeopleCount] = useState(1);
-//   const [pizzaType, setPizzaType] = useState("build");
-
-//  const increment = () =>
-//   setPeopleCount((prev) => (prev < 6 ? prev + 1 : prev));
-// const decrement = () =>
-//   setPeopleCount((prev) => (prev > 1 ? prev - 1 : 1));
-
-//   const handleSubmit = () => {
-//     console.log({ groupName, hostName, peopleCount, pizzaType });
-//     // here you can navigate to the next page later
-//   };
-
-//   return (
-//     <Container>
-//       <InputField
-//         placeholder="Group Name"
-//         value={groupName}
-//         onChange={(e) => setGroupName(e.target.value)}
-//       />
-//       <InputField
-//         placeholder="Host Name"
-//         value={hostName}
-//         onChange={(e) => setHostName(e.target.value)}
-//       />
-//       <Label>Select number of people</Label>
-//       <NumberSelector>
-//         <NumberButton onClick={decrement}>-</NumberButton>
-//         {peopleCount}
-//         <NumberButton onClick={increment}>+</NumberButton>
-//       </NumberSelector>
-//       <Dropdown value={pizzaType} onChange={(e) => setPizzaType(e.target.value)}>
-//         <option value="build">Build Your Own</option>
-//         <option value="set">Set Pizza</option>
-//         <option value="shortlist">Shortlist of Toppings</option>
-//       </Dropdown>
-//       <SubmitButton onClick={handleSubmit}>Create Group</SubmitButton>
-//     </Container>
-//   );
-// };
-// export default CreateGroup;
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRoom } from "../../hooks/useRoom";
 import styled from "styled-components";
+import Logo from "../Logo";
+import { Title, Subtitle, Paragraph } from "../Typography";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 4rem;
+  margin-top: 2rem;
   gap: 1.5rem;
 `;
 
@@ -67,7 +24,7 @@ const InputField = styled.input`
 
   &:focus {
     outline: none;
-    border-color: #ff6600; /* focus highlight */
+    border-color: #FF9505; /* focus highlight */
   }
 `;
 
@@ -79,7 +36,7 @@ const NumberSelector = styled.div`
 `;
 
 const NumberButton = styled.button`
-  background-color: #ff6600;
+  background-color: #FF9505;
   color: white;
   border: none;
   border-radius: 8px;
@@ -104,12 +61,12 @@ const Dropdown = styled.select`
 
   &:focus {
     outline: none;
-    border-color: #ff6600;
+    border-color: #FF9505;
   }
 `;
 
 const SubmitButton = styled.button`
-  background-color: #ff6600;
+  background-color: #FF9505;
   color: white;
   font-size: 1.25rem;
   font-weight: bold;
@@ -136,15 +93,27 @@ const Label = styled.div`
   margin-bottom: 0.5rem;
 `;
 
-
-
 // ...InputField, NumberSelector, NumberButton, Dropdown, SubmitButton, Label (same as before)
 
+const LogoWrapper = styled.div`
+  width: 160px; /* default size on desktop */
+  margin-bottom: 1rem;
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 600px) {
+    width: 100px; /* smaller size on mobile */
+  }
+`;
+
 const CreateGroup: React.FC = () => {
-  const [groupName, setGroupName] = useState("");
   const [hostName, setHostName] = useState("");
+  const [groupName, setGroupName] = useState("");
   const [peopleCount, setPeopleCount] = useState(1);
-  const [pizzaType, setPizzaType] = useState<"build" | "set" | "shortlist">("build");
+  const [pizzaType, setPizzaType] = useState <"set" | "shortlist">("set");
   const navigate = useNavigate();
   const { createRoom } = useRoom();
 
@@ -152,28 +121,35 @@ const CreateGroup: React.FC = () => {
   const decrement = () => setPeopleCount((prev) => (prev > 1 ? prev - 1 : 1));
 
   const handleSubmit = async () => {
-    const room = await createRoom(groupName, hostName, peopleCount, pizzaType);
+    const room = await createRoom( hostName, groupName, peopleCount, pizzaType);
 
-    if (pizzaType === "build") {
-       navigate("/qr-display", { state: { roomId: room.id } });
-    } else if (pizzaType === "set") {
-      navigate("/select-set-pizza");
-    } else {
-      navigate("/collection-pizza");
-    }
+    if (pizzaType === "set") {
+  navigate(`/set?roomId=${room.id}`);
+} else if (pizzaType === "shortlist") {
+  navigate(`/shortlist?roomId=${room.id}`);
+}
   };
 
   return (
     <Container>
-      <InputField
-        placeholder="Group Name"
-        value={groupName}
-        onChange={(e) => setGroupName(e.target.value)}
-      />
+      <LogoWrapper>
+        <Logo />
+      </LogoWrapper>
+
+      <Title> 
+       <span style={{ color: "#000000" }}>Slice</span>
+       <span style={{ color: "#FF9505" }}>Swipe</span>
+       </Title>
+
       <InputField
         placeholder="Host Name"
         value={hostName}
         onChange={(e) => setHostName(e.target.value)}
+      />
+      <InputField
+        placeholder="Group Name"
+        value={groupName}
+        onChange={(e) => setGroupName(e.target.value)}
       />
       <Label>Select number of people</Label>
       <NumberSelector>
@@ -183,13 +159,13 @@ const CreateGroup: React.FC = () => {
       </NumberSelector>
       <Dropdown
         value={pizzaType}
-        onChange={(e) => setPizzaType(e.target.value as "build" | "set" | "shortlist")}
+        onChange={(e) => setPizzaType(e.target.value as "set" | "shortlist")}
         >
-    <option value="build">Build Your Own</option>
+    
     <option value="set">Set Pizza</option>
-    <option value="shortlist">Collection of Pizza</option>
+    <option value="shortlist">Shortlist Toppings</option>
 </Dropdown>
-      <SubmitButton onClick={handleSubmit}>Create Group</SubmitButton>
+      <SubmitButton onClick={handleSubmit}>Next</SubmitButton>
     </Container>
   );
 };

@@ -6,6 +6,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useRoom } from "../../hooks/useRoom";
 
 
+
 type RoomData = {
   id: string;
   groupName: string;
@@ -63,7 +64,10 @@ await joinRoom(roomId, participantName);
   if (!room) return <div>Loading room...</div>;
 
   return (
+    
     <div style={{ textAlign: "center", marginTop: "4rem" }}>
+
+      
       <h2>Join the Swipe!</h2>
       <p>Room: {room.groupName}</p>
       <p>

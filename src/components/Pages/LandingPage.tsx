@@ -19,7 +19,10 @@ const LandingPage = () => {
       </div>
 
       {/* Title */}
-      <Title>SliceSwipe</Title>
+       <Title> 
+        <span style={{ color: "#000000" }}>Slice</span>
+       <span style={{ color: "#FF9505" }}>Swipe</span>
+       </Title>
 
       {/* Subtitle */}
       <Subtitle>Swipe your way to the perfect pizza 🍕</Subtitle>
